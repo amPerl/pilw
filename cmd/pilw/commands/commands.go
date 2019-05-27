@@ -7,7 +7,7 @@ import (
 
 var (
 	PilwCmd = &cobra.Command{
-		Use:   "",
+		Use:   "pilw",
 		Short: "",
 		Long:  ``,
 		Run: func(ccmd *cobra.Command, args []string) {
