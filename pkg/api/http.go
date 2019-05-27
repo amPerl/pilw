@@ -95,3 +95,8 @@ func deleteForm(key, path string, data url.Values) (string, error) {
 	result, err := formRequest(key, path, "DELETE", data)
 	return result, err
 }
+
+func patchForm(key, path string, data url.Values) (string, error) {
+	result, err := formRequest(key, path, "PATCH", data)
+	return result, err
+}

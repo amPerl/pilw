@@ -44,7 +44,7 @@ func GetTokenList(key string) ([]Token, error) {
 	return tokenList, err
 }
 
-// CreateToken attempts to register a new token. Returns a list of tokens on success
+// CreateToken registers a new token. Returns a list of tokens on success
 func CreateToken(key string, description string, restricted bool, billingAccountID int) ([]Token, error) {
 	form := url.Values{}
 	form.Add("billing_account_id", fmt.Sprintf("%d", billingAccountID))
@@ -64,12 +64,24 @@ func CreateToken(key string, description string, restricted bool, billingAccount
 	return tokenList, nil
 }
 
-// DeleteToken attempts to delete a token by its ID
+// DeleteToken deletes a token by its ID
 func DeleteToken(key string, tokenID int) error {
 	form := url.Values{}
 	form.Add("token_id", fmt.Sprintf("%d", tokenID))
 
 	_, err := deleteForm(key, "user-resource/token", form)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// UpdateToken updates a token with the values supplied
+func UpdateToken(key string, tokenID int, changedFields url.Values) error {
+	changedFields.Set("token_id", fmt.Sprintf("%d", tokenID))
+
+	_, err := patchForm(key, "user-resource/token", changedFields)
 	if err != nil {
 		return err
 	}

@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	"log"
+	"net/url"
 	"os"
 	"strconv"
 	"text/tabwriter"
@@ -41,10 +42,22 @@ var tokenDeleteCmd = &cobra.Command{
 	Run:   tokenDelete,
 }
 
+var tokenUpdateCmd = &cobra.Command{
+	Use:   "update [token_id] (--field=value --field2=value2)",
+	Short: "Update one or more fields on a token",
+	Args:  cobra.MinimumNArgs(1),
+	Run:   tokenUpdate,
+}
+
 func init() {
 	tokenCmd.AddCommand(tokenListCmd)
 	tokenCmd.AddCommand(tokenCreateCmd)
 	tokenCmd.AddCommand(tokenDeleteCmd)
+
+	tokenUpdateCmd.Flags().Int("billing_account_id", 0, "Set the token's billing account")
+	tokenUpdateCmd.Flags().String("description", "", "Set the token's description")
+	tokenUpdateCmd.Flags().Bool("restricted", false, "Set whether the token is restricted")
+	tokenCmd.AddCommand(tokenUpdateCmd)
 }
 
 func printTokenList(tokenList []api.Token) {
@@ -120,6 +133,39 @@ func tokenDelete(ccmd *cobra.Command, args []string) {
 	}
 
 	err = api.DeleteToken(apiKey, int(tokenID))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(tokenID)
+}
+
+func tokenUpdate(ccmd *cobra.Command, args []string) {
+	apiKey := viper.GetString("key")
+
+	tokenID, err := strconv.ParseInt(args[0], 10, 32)
+	if err != nil {
+		log.Fatalf("\"%s\" is not a valid integer value", args[0])
+	}
+
+	changedFields := url.Values{}
+
+	billingAccountIDFlag := ccmd.Flags().Lookup("billing_account_id")
+	if billingAccountIDFlag.Changed {
+		changedFields.Add("billing_account_id", billingAccountIDFlag.Value.String())
+	}
+
+	descriptionFlag := ccmd.Flags().Lookup("description")
+	if descriptionFlag.Changed {
+		changedFields.Add("description", descriptionFlag.Value.String())
+	}
+
+	restrictedFlag := ccmd.Flags().Lookup("restricted")
+	if restrictedFlag.Changed {
+		changedFields.Add("restricted", restrictedFlag.Value.String())
+	}
+
+	err = api.UpdateToken(apiKey, int(tokenID), changedFields)
 	if err != nil {
 		log.Fatal(err)
 	}
