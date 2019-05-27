@@ -42,8 +42,8 @@ func info(ccmd *cobra.Command, args []string) {
 		return
 	}
 
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', 0)
-	fmt.Fprintln(w, "ID\tCOOKIE_ID\tNAME\tLAST_ACTIVITY")
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
+	fmt.Fprintln(w, "ID\tCOOKIE ID\tNAME\tLAST ACTIVITY")
 	fmt.Fprintln(w, fmt.Sprintf(
 		"%d\t%s\t%s\t%s",
 		userInfo.ID,

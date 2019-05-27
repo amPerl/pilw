@@ -24,7 +24,7 @@ var tokenCmd = &cobra.Command{
 
 var tokenListCmd = &cobra.Command{
 	Use:   "list",
-	Short: "List user API tokens",
+	Short: "List tokens",
 	Run:   tokenList,
 }
 
@@ -68,16 +68,15 @@ func printTokenList(tokenList []api.Token) {
 		return
 	}
 
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', 0)
-	fmt.Fprintln(w, "ID\tDESCRIPTION\tRESTRICTED\tCREATED_AT\tBILLING_ACCOUNT_ID")
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
+	fmt.Fprintln(w, "ID\tDESCRIPTION\tRESTRICTED\tCREATED AT")
 	for _, token := range tokenList {
 		fmt.Fprintln(w, fmt.Sprintf(
-			"%d\t%s\t%v\t%s\t%d",
+			"%d\t%s\t%v\t%s",
 			token.ID,
 			token.Description,
 			token.Restricted,
 			token.CreatedAt.Format(time.Stamp),
-			token.BillingAccountID,
 		))
 	}
 	w.Flush()
