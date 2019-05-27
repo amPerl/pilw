@@ -6,6 +6,7 @@ import (
 )
 
 var (
+	// PilwCmd is the entrypoint and root-level command for the CLI
 	PilwCmd = &cobra.Command{
 		Use:   "pilw",
 		Short: "",
