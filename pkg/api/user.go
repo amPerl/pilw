@@ -2,25 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"strings"
-	"time"
 )
-
-type PilwTime struct {
-	time.Time
-}
-
-func (pt *PilwTime) UnmarshalJSON(p []byte) error {
-	t, err := time.Parse("2006-01-02 15:04:05", strings.Trim(string(p), "\""))
-
-	if err != nil {
-		return err
-	}
-
-	pt.Time = t
-
-	return nil
-}
 
 type UserInfo struct {
 	CookieID     string   `json:"cookie_id"`

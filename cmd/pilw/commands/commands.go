@@ -22,4 +22,5 @@ func init() {
 	viper.BindPFlag("quiet", PilwCmd.PersistentFlags().Lookup("quiet"))
 
 	PilwCmd.AddCommand(userCmd)
+	PilwCmd.AddCommand(tokenCmd)
 }
