@@ -33,23 +33,25 @@ func init() {
 func printVMList(vmList []api.VM) {
 	if viper.GetBool("quiet") {
 		for _, vm := range vmList {
-			fmt.Println(vm.ID)
+			fmt.Println(vm.UUID)
 		}
 		return
 	}
 
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
-	fmt.Fprintln(w, "ID\tNAME\tHOSTNAME\tDESCRIPTION\tPUBLIC IPV4\tMEMORY\tVCPU\tSTATUS\tCREATED AT")
+	fmt.Fprintln(w, "UUID\tNAME\tDESCRIPTION\tHOSTNAME\tOS\tPUBLIC IPV4\tMEMORY\tVCPU\tSTORAGE\tSTATUS\tCREATED AT")
 	for _, vm := range vmList {
 		fmt.Fprintln(w, fmt.Sprintf(
-			"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%s\t%s",
-			vm.ID,
+			"%s\t%s\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%s\t%s",
+			vm.UUID,
 			vm.Name,
 			vm.Description,
 			vm.Hostname,
+			fmt.Sprintf("%s %s", vm.OSName, vm.OSVersion),
 			vm.PublicIPv4,
 			vm.Memory,
 			vm.VCPU,
+			len(vm.Storage),
 			vm.Status,
 			vm.CreatedAt.Format(time.Stamp),
 		))
