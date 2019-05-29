@@ -43,7 +43,7 @@ var tokenDeleteCmd = &cobra.Command{
 }
 
 var tokenUpdateCmd = &cobra.Command{
-	Use:   "update [token_id] (--field=value --field2=value2)",
+	Use:   "update [token_id]",
 	Short: "Update one or more fields on a token",
 	Args:  cobra.MinimumNArgs(1),
 	Run:   tokenUpdate,

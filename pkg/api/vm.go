@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"net/url"
 )
 
 type VMStorage struct {
@@ -43,7 +44,7 @@ type VM struct {
 	VCPU             int         `json:"vcpu"`
 }
 
-func ParseVMList(str []byte) ([]VM, error) {
+func parseVMList(str []byte) ([]VM, error) {
 	var vmList []VM
 
 	err := json.Unmarshal(str, &vmList)
@@ -60,10 +61,21 @@ func GetVMList(key string) ([]VM, error) {
 		return nil, err
 	}
 
-	vmList, err := ParseVMList([]byte(resp))
+	vmList, err := parseVMList([]byte(resp))
 	if err != nil {
 		return nil, err
 	}
 
 	return vmList, err
+}
+
+func UpdateVM(key string, uuid string, changedFields url.Values) error {
+	changedFields.Set("uuid", uuid)
+
+	_, err := patchForm(key, "user-resource/vm", changedFields)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

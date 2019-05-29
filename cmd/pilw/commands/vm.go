@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	"log"
+	"net/url"
 	"os"
 	"text/tabwriter"
 	"time"
@@ -26,8 +27,20 @@ var vmListCmd = &cobra.Command{
 	Run:   vmList,
 }
 
+var vmUpdateCmd = &cobra.Command{
+	Use:   "update [uuid]",
+	Short: "Update one or more fields on a VM",
+	Args:  cobra.MinimumNArgs(1),
+	Run:   vmUpdate,
+}
+
 func init() {
 	vmCmd.AddCommand(vmListCmd)
+
+	vmUpdateCmd.Flags().String("name", "", "Name of the VM")
+	vmUpdateCmd.Flags().Int("ram", 0, "RAM in megabytes (has to be set with vCPU)")
+	vmUpdateCmd.Flags().Int("vcpu", 0, "vCPU in cores (has to be set with RAM)")
+	vmCmd.AddCommand(vmUpdateCmd)
 }
 
 func printVMList(vmList []api.VM) {
@@ -68,4 +81,32 @@ func vmList(ccmd *cobra.Command, args []string) {
 	}
 
 	printVMList(vmList)
+}
+
+func vmUpdate(ccmd *cobra.Command, args []string) {
+	apiKey := viper.GetString("key")
+	uuid := args[0]
+	changedFields := url.Values{}
+
+	nameFlag := ccmd.Flags().Lookup("name")
+	if nameFlag.Changed {
+		changedFields.Add("name", nameFlag.Value.String())
+	}
+
+	ramFlag := ccmd.Flags().Lookup("ram")
+	if ramFlag.Changed {
+		changedFields.Add("ram", ramFlag.Value.String())
+	}
+
+	vCPUFlag := ccmd.Flags().Lookup("vcpu")
+	if vCPUFlag.Changed {
+		changedFields.Add("vcpu", vCPUFlag.Value.String())
+	}
+
+	err := api.UpdateVM(apiKey, uuid, changedFields)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(uuid)
 }

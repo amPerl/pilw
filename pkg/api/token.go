@@ -19,7 +19,7 @@ type Token struct {
 	UserID           int      `json:"user_id"`
 }
 
-func ParseTokenList(str []byte) ([]Token, error) {
+func parseTokenList(str []byte) ([]Token, error) {
 	var tokenList []Token
 
 	err := json.Unmarshal(str, &tokenList)
@@ -36,7 +36,7 @@ func GetTokenList(key string) ([]Token, error) {
 		return nil, err
 	}
 
-	tokenList, err := ParseTokenList([]byte(resp))
+	tokenList, err := parseTokenList([]byte(resp))
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func CreateToken(key string, description string, restricted bool, billingAccount
 		return nil, err
 	}
 
-	tokenList, err := ParseTokenList([]byte(resp))
+	tokenList, err := parseTokenList([]byte(resp))
 	if err != nil {
 		return nil, err
 	}
