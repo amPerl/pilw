@@ -5,10 +5,12 @@ import (
 	"time"
 )
 
+// PilwTime is a wrapper over Go's native time only for unmarshaling from JSON
 type PilwTime struct {
 	time.Time
 }
 
+// UnmarshalJSON specifies formatting to unmarshal Pilw timestamps
 func (pt *PilwTime) UnmarshalJSON(p []byte) error {
 	str := strings.Trim(string(p), "\"")
 	if str == "null" {

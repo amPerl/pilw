@@ -6,6 +6,7 @@ import (
 	"net/url"
 )
 
+// Token represents a Pilw API token
 type Token struct {
 	BillingAccountID int      `json:"billing_account_id"`
 	ConsumerID       string   `json:"consumer_id"`
@@ -30,6 +31,7 @@ func parseTokenList(str []byte) ([]Token, error) {
 	return tokenList, nil
 }
 
+// GetTokenList fetches a list of tokens
 func GetTokenList(key string) ([]Token, error) {
 	resp, err := get(key, "user-resource/token/list")
 	if err != nil {

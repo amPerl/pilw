@@ -5,6 +5,7 @@ import (
 	"net/url"
 )
 
+// VMStorage represents a Pilw VM's storage item
 type VMStorage struct {
 	CreatedAt  PilwTime `json:"created_at"`
 	ID         int      `json:"id"`
@@ -21,6 +22,7 @@ type VMStorage struct {
 	UUID      string   `json:"uuid"`
 }
 
+// VM represents a Pilw Virtual Machine
 type VM struct {
 	Backup           bool        `json:"backup"`
 	BillingAccountID int         `json:"billing_account"`
@@ -55,6 +57,7 @@ func parseVMList(str []byte) ([]VM, error) {
 	return vmList, nil
 }
 
+// GetVMList returns a list of all VMs
 func GetVMList(key string) ([]VM, error) {
 	resp, err := get(key, "user-resource/vm/list")
 	if err != nil {
@@ -69,6 +72,7 @@ func GetVMList(key string) ([]VM, error) {
 	return vmList, err
 }
 
+// UpdateVM modifies a VM by specifying a list of fields to update
 func UpdateVM(key string, uuid string, changedFields url.Values) error {
 	changedFields.Set("uuid", uuid)
 

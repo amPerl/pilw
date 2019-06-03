@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 )
 
+// UserInfo represents a Pilw user's metadata
 type UserInfo struct {
 	CookieID     string   `json:"cookie_id"`
 	ID           int      `json:"id"`
@@ -11,6 +12,7 @@ type UserInfo struct {
 	Name         string   `json:"name"`
 }
 
+// GetUserInfo returns the current authenticated user's metadata
 func GetUserInfo(key string) (UserInfo, error) {
 	var userInfo UserInfo
 
