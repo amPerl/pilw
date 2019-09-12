@@ -9,5 +9,4 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      repo: docker.rtag.me/pilw
-      registry: docker.rtag.me
+      repo: amperl/pilw
