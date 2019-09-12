@@ -25,4 +25,5 @@ func init() {
 	PilwCmd.AddCommand(userCmd)
 	PilwCmd.AddCommand(tokenCmd)
 	PilwCmd.AddCommand(vmCmd)
+	PilwCmd.AddCommand(containerCmd)
 }
