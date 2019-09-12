@@ -86,6 +86,11 @@ func get(key, path string) (string, error) {
 	return result, err
 }
 
+func put(key, path string) (string, error) {
+	result, err := plainRequest(key, path, "PUT")
+	return result, err
+}
+
 func postForm(key, path string, data url.Values) (string, error) {
 	result, err := formRequest(key, path, "POST", data)
 	return result, err

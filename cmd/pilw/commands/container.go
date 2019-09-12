@@ -14,4 +14,5 @@ var containerCmd = &cobra.Command{
 
 func init() {
 	containerCmd.AddCommand(containerGroupCmd)
+	containerCmd.AddCommand(containerServiceCmd)
 }

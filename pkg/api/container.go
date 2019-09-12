@@ -50,7 +50,7 @@ func parseContainerGroupList(str []byte) ([]ContainerGroup, error) {
 	return containerGroupList, nil
 }
 
-// GetContainerGroupList fetches a list of tokens
+// GetContainerGroupList fetches a list of container groups
 func GetContainerGroupList(key string) ([]ContainerGroup, error) {
 	resp, err := get(key, "container/groups")
 	if err != nil {
@@ -65,47 +65,39 @@ func GetContainerGroupList(key string) ([]ContainerGroup, error) {
 	return containerGroupList, err
 }
 
-// // CreateToken registers a new token. Returns a list of tokens on success
-// func CreateToken(key string, description string, restricted bool, billingAccountID int) ([]Token, error) {
-// 	form := url.Values{}
-// 	form.Add("billing_account_id", fmt.Sprintf("%d", billingAccountID))
-// 	form.Add("description", description)
-// 	form.Add("restricted", fmt.Sprintf("%v", restricted))
+// GetContainerServiceList fetches a list of container groups
+func GetContainerServiceList(key string) ([]ContainerService, error) {
+	containerGroupList, err := GetContainerGroupList(key)
+	if err != nil {
+		return nil, err
+	}
 
-// 	resp, err := postForm(key, "user-resource/token", form)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+	containerServiceList := make([]ContainerService, 0)
+	for _, containerGroup := range containerGroupList {
+		for _, containerService := range containerGroup.Services {
+			containerServiceList = append(containerServiceList, containerService)
+		}
+	}
 
-// 	tokenList, err := parseContainerGroupList([]byte(resp))
-// 	if err != nil {
-// 		return nil, err
-// 	}
+	return containerServiceList, err
+}
 
-// 	return tokenList, nil
-// }
+// StopContainerService stops a container service by suuid
+func StopContainerService(key string, suuid string) error {
+	_, err := put(key, "container/services/"+suuid+"/start")
+	if err != nil {
+		return err
+	}
 
-// // DeleteToken deletes a token by its ID
-// func DeleteToken(key string, tokenID int) error {
-// 	form := url.Values{}
-// 	form.Add("token_id", fmt.Sprintf("%d", tokenID))
+	return err
+}
 
-// 	_, err := deleteForm(key, "user-resource/token", form)
-// 	if err != nil {
-// 		return err
-// 	}
+// StartContainerService starts a container service by suuid
+func StartContainerService(key string, suuid string) error {
+	_, err := put(key, "container/services/"+suuid+"/stop")
+	if err != nil {
+		return err
+	}
 
-// 	return nil
-// }
-
-// // UpdateToken updates a token with the values supplied
-// func UpdateToken(key string, tokenID int, changedFields url.Values) error {
-// 	changedFields.Set("token_id", fmt.Sprintf("%d", tokenID))
-
-// 	_, err := patchForm(key, "user-resource/token", changedFields)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
+	return err
+}
