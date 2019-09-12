@@ -84,7 +84,7 @@ func GetContainerServiceList(key string) ([]ContainerService, error) {
 
 // StopContainerService stops a container service by suuid
 func StopContainerService(key string, suuid string) error {
-	_, err := put(key, "container/services/"+suuid+"/start")
+	_, err := put(key, "container/services/"+suuid+"/stop")
 	if err != nil {
 		return err
 	}
@@ -94,7 +94,7 @@ func StopContainerService(key string, suuid string) error {
 
 // StartContainerService starts a container service by suuid
 func StartContainerService(key string, suuid string) error {
-	_, err := put(key, "container/services/"+suuid+"/stop")
+	_, err := put(key, "container/services/"+suuid+"/start")
 	if err != nil {
 		return err
 	}
